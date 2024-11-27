@@ -3,6 +3,7 @@
 
 
 class Board {
+public:
 	Board(std::string fileName);
 	void loadBoard();
 	void print() const;

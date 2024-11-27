@@ -15,5 +15,5 @@ private:
 	Board m_board;
 	Player m_player;
 	std::vector<Guard> m_guard;
-	std::
+	
 };
