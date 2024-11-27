@@ -24,7 +24,7 @@ void Controller::run() {
 	while (std::getline(file, line)) {
 		playlist.push_back(line);
 	}
-
+	yair work 
 
 	// for playlist
 	for (int  i = 0; i < playlist.size(); i++)
