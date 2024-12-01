@@ -8,14 +8,8 @@
 #include "string"
 #include "vector"
 #include "fstream"
-Controller::Controller()
-{
-	
-}
 //#include "istream"
-//Controller::Controller() {
-//
-//}
+Controller::Controller() {}
 void Controller::run() {
 
 	// read playlist:
