@@ -9,10 +9,10 @@
 #include "vector"
 #include "fstream"
 //#include "istream"
-Controller::Controller() {}
+Controller::Controller(){}
 void Controller::run() {
 
-	// read playlist:
+	//// read playlist:
 	std::vector<std::string> playlist;
 	auto line = std::string();
 	auto file = std::ifstream("playlist.txt");
@@ -25,17 +25,29 @@ void Controller::run() {
 		playlist.push_back(line);
 	}
 	
-	
-	
+	m_board.loadBoard(playlist[0]);
+		m_board.print();
 	// for playlist
-	for (int  i = 0; i < playlist.size(); i++)
-	{
-		Board board = Board(playlist[i]);
-		
-		//playBoard();
-	}
-	// load board
-	
-	// play board
+//	for (int  i = 0; i < playlist.size(); i++)
+//	{
+//		Board board1  = Board(playlist[i]);
+//		board1.print();
+//		//playBoard()
+////			{
+//		//while (!board_victory)
+//		//		board.victory =player.move(*this) 
+//		//		for each  guard.move(*this)
+//		//		for each  bomb.act(*this)
+//
+//	}
+
 }
 
+//void Controller::playBoard(Board& board)
+//{
+//	while (!m_board.getVictory())
+//	{
+//		m_player.  
+//	}
+//}
+//
