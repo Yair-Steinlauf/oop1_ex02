@@ -1,12 +1,14 @@
+#pragma once
 #include "vector"
 #include "string"
 
 
 class Board {
 public:
+	Board();
 	Board(std::string fileName);
-	void loadBoard();
-	void print() const;
+	//void loadBoard();
+	//void print() const;
 
 
 private:
