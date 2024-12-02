@@ -40,8 +40,11 @@ void Board::loadBoard(std::string fileName, Player &player, std::vector<Guard> &
 		std::cerr << "Level not valid\n";
 		exit(EXIT_FAILURE);
 	}
-}
 
+	//for limits checks
+	m_rows = m_board.size();
+	m_cols = m_board[0].size();
+}
 
 
 
@@ -65,6 +68,12 @@ void Board::print(int level)
 
 struct Location Board::isValid(struct Location newLoc, struct Location lastLoc)
 {
+	//added Bounds check YAIR
+	if (newLoc.col >= m_board[0].size() ||
+		newLoc.row >= m_board.size())
+	{
+		return lastLoc;
+	}
 	char newPlace = m_board[newLoc.row][newLoc.col];
 	if (newPlace != '#' && newPlace != '@') {
 		return newLoc;

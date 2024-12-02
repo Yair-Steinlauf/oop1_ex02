@@ -22,6 +22,7 @@ public:
 	int size();
 	void setNewHeal(int heal);
 	void setPoint(int points);
+	bool isInBoard(Location loc);
 	//bool getVictory();
 	//void setVictory();
 
@@ -32,6 +33,8 @@ private:
 	struct Location m_healLocation;
 	struct Location m_pointLocation;
 	struct Location m_levelLocation;
+	int m_rows;
+	int m_cols;
 
 
 
