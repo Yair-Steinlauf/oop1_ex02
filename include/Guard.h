@@ -13,7 +13,10 @@ public:
 	struct Location getStartLocation();
 	bool isGuardBombed(Bomb bomb);
 	void resetLocation();
-	void move(Player player, std::vector<Bomb> bombs);
+	void setLocation(Location newLoc);
+	Location randMove();
+	Location smartMove(Player& player);
+	Location move(Board& board, Player &player);
 private:
 	struct Location m_location;
 	struct Location m_startLocation;
