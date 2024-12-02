@@ -52,7 +52,7 @@ void Controller::run()
             m_player.setLocation(newPlayerLoc);
             for (int index = 0; index < m_guard.size(); index++)
             {
-                Location newGuardLoc(m_guard[index].move(m_board));
+                Location newGuardLoc(m_guard[index].move(m_board,m_player));
                 m_board.setGuard(m_guard[index].getLocation(), newGuardLoc);
                 m_guard[index].setLocation(newGuardLoc);
             }

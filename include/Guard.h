@@ -14,7 +14,9 @@ public:
 	bool isGuardBombed(Bomb bomb);
 	void resetLocation();
 	void setLocation(Location newLoc);
-	Location move(Board& board);
+	Location randMove();
+	Location smartMove(Player& player);
+	Location move(Board& board, Player &player);
 private:
 	struct Location m_location;
 	struct Location m_startLocation;

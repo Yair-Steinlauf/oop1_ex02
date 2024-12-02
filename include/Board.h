@@ -22,7 +22,7 @@ public:
 	int size();
 	void setNewHeal(int heal);
 	void setPoint(int points);
-	bool isInBoard(Location loc);
+
 	//bool getVictory();
 	//void setVictory();
 

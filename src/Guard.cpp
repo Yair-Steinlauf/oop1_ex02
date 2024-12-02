@@ -45,71 +45,48 @@ void Guard::setLocation(Location newLoc)
 	m_location.row = newLoc.row;
 	m_location.col = newLoc.col;
 }
-Location Guard::move(Board &board)
+Location Guard::randMove()
 {
-	Location newLoc = randMove();
-
-	newLoc = board.isValid(m_location, newLoc);
-
-	return Location(m_location.row +1,m_location.col);
-
-
-
-
-
-
-
-
-
-
+	int a = rand() % 3;
+	switch (a)
+	{
+	case 0:
+		return Location(m_location.row + 1, m_location.col);
+	case 1:
+		return Location(m_location.row - 1, m_location.col);
+	case 2:
+		return Location(m_location.row, m_location.col + 1);
+	case 3:
+		return Location(m_location.row , m_location.col - 1);
+	}
+	return m_location;
+}
+Location Guard::smartMove(Player& player)
+{
 	////player location
-	//Location player_loc = player.getLocation();
-	////calc diff
-	//int x_diff = player.getLocation().col - m_location.col,
-	//	y_diff = player.getLocation().row - m_location.col;
-	//// check if deseird step is valid
-	//if (abs(x_diff) > abs(y_diff))
-	//{
-	//	m_location.col++;
-	//}
-	//else m_location
+	Location player_loc = player.getLocation();
+	if(player_loc.row > m_location.row)
+		return Location(m_location.row +1, m_location.col );
+	else if(player_loc.row < m_location.row)
+		return Location(m_location.row -1, m_location.col);
+	if(player_loc.col > m_location.col)
+		return Location(m_location.row, m_location.col +1);
+	if (player_loc.col < m_location.col)
+		return Location(m_location.row, m_location.col -1);
+	return m_location;
+	
 
-	////check if valid move, not valid? change
+}
+Location Guard::move(Board &board, Player &player)
+{
 
+	Location newLoc;
+	if (rand() % 2)
+	{
+		newLoc = randMove();
+	}
+	else newLoc = smartMove(player);
 
+	return board.isValid(newLoc, m_location);
 
-
-
-
-
-
-
-
-
-
-	//std::random_device rd;  // מחולל מספרים אקראיים מבוסס חומרה
-	//std::mt19937 gen(rd()); // מחולל פסאודו-אקראי מבוסס Mersenne Twister
-	//std::uniform_int_distribution<> dist(0, 3); // טווח המספרים 0 עד 3
-
-	//int randomNumber = dist(gen);
-	//std::cout << "Random number: " << randomNumber << std::endl;
-
-	//switch (randomNumber)
-	//{
-	//case 0:
-
-	//default:
-	//	break;
-	//}
-
-	//bool isBombExist = bombs.size() > 0; // check not null
-	//if (isBombExist) {
-	//	struct Location bombLoc = bombs[0].getLocation();
-	//	if (m_location.row == bombLoc.row) {
-	//		if (m_location.col > bombLoc.col) {
-	//			if(m_)
-	//			setGuardLoc(Location())
-	//		}
-	//	}
-	//}
 }
