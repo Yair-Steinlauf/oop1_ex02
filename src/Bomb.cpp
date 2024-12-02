@@ -1,7 +1,11 @@
 
 #include "Bomb.h"
 
-Bomb::Bomb(int row, int col) : m_row(row), m_col(col) {}
+Bomb::Bomb()
+{
+}
+
+Bomb::Bomb(struct Location loc) : m_loc(loc), m_time(5) {}
 
 void Bomb::act()
 {
@@ -11,4 +15,9 @@ void Bomb::act()
 int Bomb::getTime()
 {
 	return m_time;
+}
+
+Location Bomb::getLocation()
+{
+	return m_loc;
 }

@@ -1,15 +1,27 @@
 #pragma once
 #include "vector"
+#include "Location.h"
 #include "string"
-
+#include "Player.h"
+#include "Guard.h"
+#include "Bomb.h"
 
 class Board {
 public:
 	Board() {};
-	void print() const;
-
-	void loadBoard(std::string fileName);
-	Board& operator=(const Board& other);
+	void print(int level);
+	void loadBoard(std::string fileName, Player& player, std::vector<Guard>& guards, struct Location& doorLoc, int& numOfGuards);
+	//Board& operator=(const Board& other);
+	struct Location isValid(struct Location lastLoc, struct Location newLoc);
+	void setPlayer(struct Location lastLoc, struct Location newLoc);
+	void setGuard(struct Location lastLoc, struct Location newLoc);
+	void playerOnBomb(struct Location bombLoc);
+	void putBombTime(Bomb bomb);
+	void bombExplodes(Bomb bomb);
+	void finishBombExploeds(Bomb bomb);
+	int size();
+	void setNewHeal(int heal);
+	void setPoint(int points);
 	//bool getVictory();
 	//void setVictory();
 
@@ -17,5 +29,11 @@ public:
 private:
 	std::vector<std::string> m_board;
 	bool m_victory = false;
+	struct Location m_healLocation;
+	struct Location m_pointLocation;
+	struct Location m_levelLocation;
+
+
+
 
 };

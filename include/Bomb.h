@@ -1,10 +1,14 @@
 #pragma once
+#include "Location.h"
+
 class Bomb {
 public:
-	Bomb(int row, int col);
+	Bomb();
+	Bomb(struct Location loc);
 	void act();
 	int getTime();
+	struct Location getLocation();
 private:
-	int m_row, m_col;
-	int m_time = 5;
+	struct Location m_loc;
+	int m_time;
 };
