@@ -40,10 +40,6 @@ void Board::loadBoard(std::string fileName, Player &player, std::vector<Guard> &
 		std::cerr << "Level not valid\n";
 		exit(EXIT_FAILURE);
 	}
-
-	//for limits checks
-	m_rows = m_board.size();
-	m_cols = m_board[0].size();
 }
 
 
