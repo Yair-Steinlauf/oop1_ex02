@@ -11,6 +11,7 @@
 // #include "istream"
 void resetGuards(std::vector<Guard> &guards, Board &board);
 void checkGuardsBombed(std::vector<Guard>& guards, int &point, Bomb bomb);
+bool checkGuardCollide(std::vector<Guard> guards, Location playerLoc);
 Controller::Controller() {}
 void Controller::run()
 {
@@ -90,7 +91,9 @@ void Controller::run()
                         }
                     }
                     else {
-                        // move guards:
+                        
+
+                        
 
                     }
                    
@@ -107,6 +110,20 @@ void Controller::run()
                     m_bombs[bombIndex].act();
                 }
 
+                
+
+            }
+            if (checkGuardCollide(m_guard, newPlayerLoc)) {
+                m_player.decreaseHeal();
+                m_board.setNewHeal(m_player.getHeal());
+            }
+            // move guards:
+
+            // after move guards check if player bump into guard
+            if (checkGuardCollide(m_guard, newPlayerLoc))
+            {
+                m_player.decreaseHeal();
+                m_board.setNewHeal(m_player.getHeal());
             }
 
             Screen::setLocation(Location(m_board.size(), 0));
@@ -168,4 +185,14 @@ void checkGuardsBombed(std::vector<Guard>& guards, int &points, Bomb bomb)
             guardIndex--;
         }
     }
+}
+
+bool checkGuardCollide(std::vector<Guard> guards, Location playerLoc) {
+    for (int guardIndex = 0; guardIndex < guards.size(); guardIndex++)
+    {
+        if (playerLoc == guards[guardIndex].getLocation()) {
+            return true;
+        }
+    }
+    return false;
 }
