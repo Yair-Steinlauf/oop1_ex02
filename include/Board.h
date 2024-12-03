@@ -33,10 +33,4 @@ private:
 	struct Location m_healLocation;
 	struct Location m_pointLocation;
 	struct Location m_levelLocation;
-	int m_rows;
-	int m_cols;
-
-
-
-
 };
