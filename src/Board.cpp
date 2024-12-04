@@ -44,7 +44,6 @@ void Board::loadBoard(std::string fileName, Player &player, std::vector<Guard> &
 
 
 
-
 void Board::print(int level)
 {
 	for (int row = 0; row < m_board.size(); row++)
@@ -65,6 +64,12 @@ void Board::print(int level)
 
 struct Location Board::isValid(struct Location newLoc, struct Location lastLoc)
 {
+	//added Bounds check YAIR
+	if (newLoc.col > m_board[0].size() ||
+		newLoc.row > m_board.size())
+	{
+		return lastLoc;
+	}
 	char newPlace = m_board[newLoc.row][newLoc.col];
 	if (newPlace != '#' && newPlace != '@') {
 		return newLoc;

@@ -22,6 +22,7 @@ public:
 	int size();
 	void setNewHeal(int heal);
 	void setPoint(int points);
+
 	//bool getVictory();
 	//void setVictory();
 
@@ -32,8 +33,4 @@ private:
 	struct Location m_healLocation;
 	struct Location m_pointLocation;
 	struct Location m_levelLocation;
-
-
-
-
 };

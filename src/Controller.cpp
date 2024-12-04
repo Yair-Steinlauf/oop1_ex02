@@ -51,7 +51,12 @@ void Controller::run()
 
             m_board.setPlayer(m_player.getLocation(), newPlayerLoc);
             m_player.setLocation(newPlayerLoc);
-
+            for (int index = 0; index < m_guard.size(); index++)
+            {
+                Location newGuardLoc(m_guard[index].move(m_board,m_player));
+                m_board.setGuard(m_guard[index].getLocation(), newGuardLoc);
+                m_guard[index].setLocation(newGuardLoc);
+            }
             
 
             for (int bombIndex = 0; bombIndex < m_bombs.size(); bombIndex++)
@@ -108,8 +113,7 @@ void Controller::run()
                 }
                 if (!isBombExploded && !isPlayerBombed) {
                     m_bombs[bombIndex].act();
-                }
-
+               
                 
 
             }
@@ -124,6 +128,7 @@ void Controller::run()
             {
                 m_player.decreaseHeal();
                 m_board.setNewHeal(m_player.getHeal());
+
             }
 
             Screen::setLocation(Location(m_board.size(), 0));
