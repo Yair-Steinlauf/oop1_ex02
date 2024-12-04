@@ -189,5 +189,10 @@ void Board::setPoint(int points)
 	std::cout << points;
 }
 
+char Board::getLocationData(Location loc)
+{
+	return m_board[loc.col][loc.row];
+}
+
  
 
