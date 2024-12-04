@@ -10,7 +10,7 @@
 
 Guard::Guard(){}
 
-Guard::Guard(Location loc) : m_location(loc), m_startLocation(loc){}
+Guard::Guard(Location loc) : m_location(loc), m_startLocation(loc), m_isExist(true){}
 
 Location Guard::getLocation()
 {
@@ -32,6 +32,7 @@ bool Guard::isGuardBombed(Bomb bomb)
 	if (m_location == bombLoc1 || m_location == bombLoc2 || m_location == bombLoc3 || m_location == bombLoc4 || m_location == bombLoc5)
 	{
 		return true;
+		m_isExist = false;
 	}
 	return false;
 }
@@ -90,4 +91,9 @@ Location Guard::move(Board &board, Player &player)
 		return m_location;
 	return board.isValid(newLoc, m_location);
 	
+}
+
+bool Guard::getIsExist()
+{
+	return m_isExist;
 }

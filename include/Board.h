@@ -9,7 +9,7 @@
 class Board {
 public:
 	Board() {};
-	void print(int level);
+	void print(int level, int points);
 	void loadBoard(std::string fileName, Player& player, std::vector<Guard>& guards, struct Location& doorLoc, int& numOfGuards);
 	//Board& operator=(const Board& other);
 	struct Location isValid(struct Location lastLoc, struct Location newLoc);

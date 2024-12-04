@@ -14,6 +14,7 @@ Player::Player(int row, int col)
 {
 	m_location.row = row;
 	m_location.col = col;
+	m_startLocation = m_location;
 	m_heal = 3;
 }
 
@@ -41,9 +42,19 @@ bool Player::isPlayerBombed(Bomb bomb)
 	return false;
 }
 
+void Player::resetLocation()
+{
+	m_location = m_startLocation;
+}
+
 struct Location Player::getLocation()
 {
 	return m_location;
+}
+
+Location Player::getStartLocation()
+{
+	return m_startLocation;
 }
 
 Location Player::move(Board &board, bool &isBombPutted)
@@ -64,7 +75,10 @@ Location Player::move(Board &board, bool &isBombPutted)
 			break;
 		default:
 			isBombPutted = isBombClicked(c);
-			isBombPutted == true ? toTryAgain = false : toTryAgain = true;
+			isBombPutted == true ? toTryAgain = false : toTryAgain = true;			
+			if (std::isspace) {				
+				toTryAgain = false;
+			}
 			break;
 		}
 		// handle bomb

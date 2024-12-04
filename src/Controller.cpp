@@ -13,13 +13,13 @@
 using namespace std::chrono_literals;
 // #include "istream"
 void resetGuards(std::vector<Guard>& guards, Board& board);
-void checkGuardsBombed(std::vector<Guard>& guards, int& point, Bomb bomb);
+int getPointFromBombedGuards(std::vector<Guard>& guards, Bomb bomb);
 bool checkGuardCollide(std::vector<Guard> guards, Location playerLoc);
 Controller::Controller() {}
 void Controller::run()
 {
 
-	//// read playlist:
+	// read playlist:
 	std::vector<std::string> playlist;
 	auto line = std::string();
 	auto file = std::ifstream("playlist.txt");
@@ -27,122 +27,142 @@ void Controller::run()
 		std::cerr << "Can't read from file\n";
 		exit(EXIT_FAILURE);
 	}*/
-
 	while (std::getline(file, line))
 	{
 		playlist.push_back(line);
 	}
-	struct Location doorLocation;
+	
+	bool isFailed = false;
+	int playerPoints = 0;
 	for (int level = 0; level < playlist.size(); level++)
 	{
+		Board curBoard;
+		Player curPlayer;
+		std::vector<Guard> curGuards;
+		std::vector<Bomb> curBombs;
 		int numOfGuards = 0;
-		int playerPoints = 0;
-		m_board.loadBoard(playlist[level], m_player, m_guard, doorLocation, numOfGuards);
-		m_board.print(level + 1);
+		struct Location doorLocation;
+		bool isFinishLevel = false;
+		curBoard.loadBoard(playlist[level], curPlayer, curGuards, doorLocation, numOfGuards);
+		curBoard.print(level + 1, playerPoints);
 		while (true)
 		{
 			bool isBombPutted = false;
-			struct Location newPlayerLoc = m_player.move(m_board, isBombPutted);
+			struct Location newPlayerLoc = curPlayer.move(curBoard, isBombPutted);
+			// get the door -> level finished
 			if (newPlayerLoc == doorLocation) {
-				std::cout << "finish it!!";
+				isFinishLevel = true;
+				playerPoints += numOfGuards * 3 + 25;
+				break;
 			}
 			if (isBombPutted)
 			{
-				m_bombs.push_back(Bomb(newPlayerLoc));
-				m_board.playerOnBomb(newPlayerLoc);
+				curBombs.push_back(Bomb(newPlayerLoc));
+				curBoard.playerOnBomb(newPlayerLoc);
 			}
-
-			m_board.setPlayer(m_player.getLocation(), newPlayerLoc);
-			m_player.setLocation(newPlayerLoc);
-
-
-
-			for (int bombIndex = 0; bombIndex < m_bombs.size(); bombIndex++)
+			curBoard.setPlayer(curPlayer.getLocation(), newPlayerLoc);
+			curPlayer.setLocation(newPlayerLoc);
+			for (int bombIndex = 0; bombIndex < curBombs.size(); bombIndex++)
 			{
 				bool isBombExploded = false;
 				bool isPlayerBombed = false;
-				if (newPlayerLoc == m_bombs[bombIndex].getLocation())
+				if (newPlayerLoc == curBombs[bombIndex].getLocation())
 				{
-					m_board.playerOnBomb(newPlayerLoc);
+					curBoard.playerOnBomb(newPlayerLoc);
 				}
-				else if (m_bombs[bombIndex].getTime() > 0)
+				else if (curBombs[bombIndex].getTime() > 0)
 				{
-					m_board.putBombTime(m_bombs[bombIndex]);
+					curBoard.putBombTime(curBombs[bombIndex]);
 				}
-				else if (m_bombs[bombIndex].getTime() == 0)
+				else if (curBombs[bombIndex].getTime() == 0)
 				{
-					m_board.bombExplodes(m_bombs[bombIndex]);
+					curBoard.bombExplodes(curBombs[bombIndex]);
 					// check if guard bombed
-					checkGuardsBombed(m_guard, playerPoints, m_bombs[bombIndex]);
-					m_board.setPoint(playerPoints);
+					int newPoints = getPointFromBombedGuards(curGuards, curBombs[bombIndex]);
+					if (newPoints > 0) {
+						playerPoints += newPoints;
+						curBoard.setPoint(playerPoints);
+					}					
 					// check if player in bomb place:
-					if (m_player.isPlayerBombed(m_bombs[bombIndex]))
+					if (curPlayer.isPlayerBombed(curBombs[bombIndex]))
 					{
-						m_player.decreaseHeal();
+						curPlayer.decreaseHeal();
 						isPlayerBombed = true;
-						if (m_player.getHeal() == 0) {
-							//std::cout << "You Lose!! lala";
+						if (curPlayer.getHeal() == 0) {
+							isFailed = true;
+							break;							
 						}
 						else {
-
-							m_board.setNewHeal(m_player.getHeal());
-							m_board.finishBombExploeds(m_bombs[bombIndex]);
-							m_board.setPlayer(newPlayerLoc, newPlayerLoc);
-							m_bombs.clear(); // reset bomb                            
-							resetGuards(m_guard, m_board); // reset guards
-
+							curBoard.setNewHeal(curPlayer.getHeal());
+							curBoard.finishBombExploeds(curBombs[bombIndex]);
+							curBoard.setPlayer(curPlayer.getLocation(), curPlayer.getStartLocation());
+							curPlayer.resetLocation();
+							curBombs.clear(); // reset bomb                            
+							resetGuards(curGuards, curBoard); // reset guards
 						}
 					}
 					else {
-
-
-
 					}
-
-
 				}
 				else // time == -1
 				{
-					m_board.finishBombExploeds(m_bombs[bombIndex]);
-					m_bombs.erase(m_bombs.begin() + bombIndex);
+					curBoard.finishBombExploeds(curBombs[bombIndex]);
+					curBombs.erase(curBombs.begin() + bombIndex);
 					bombIndex--;
 					isBombExploded = true;
 				}
 				if (!isBombExploded && !isPlayerBombed) {
-					m_bombs[bombIndex].act();
-
-
-
+					curBombs[bombIndex].act();
 				}
-
-
-				
-
 			}
-			if (checkGuardCollide(m_guard, newPlayerLoc)) {
-				m_player.decreaseHeal();
-				m_board.setNewHeal(m_player.getHeal());
+			if (checkGuardCollide(curGuards, newPlayerLoc)) {
+				curPlayer.decreaseHeal();
+				curBoard.setNewHeal(curPlayer.getHeal());
+				for (int guardIndex = 0; guardIndex < curGuards.size(); guardIndex++)
+				{
+					curBoard.setGuard(curGuards[guardIndex].getLocation(), curGuards[guardIndex].getStartLocation());
+					curGuards[guardIndex].resetLocation();
+				}
+				curBoard.setPlayer(curPlayer.getLocation(), curPlayer.getStartLocation());
+				curPlayer.resetLocation();
 			}
 			// move guards:
-			for (int index = 0; index < m_guard.size(); index++)
+			for (int index = 0; index < curGuards.size(); index++)
 			{
 				// sleep:
 				std::this_thread::sleep_for(50ms);
-				Location newGuardLoc(m_guard[index].move(m_board, m_player));
-				m_board.setGuard(m_guard[index].getLocation(), newGuardLoc);
-				m_guard[index].setLocation(newGuardLoc);
+				Location newGuardLoc(curGuards[index].move(curBoard, curPlayer));
+				curBoard.setGuard(curGuards[index].getLocation(), newGuardLoc);
+				curGuards[index].setLocation(newGuardLoc);
 			}
 			// after move guards check if player bump into guard
-			if (checkGuardCollide(m_guard, newPlayerLoc))
+			if (checkGuardCollide(curGuards, newPlayerLoc))
 			{
-				m_player.decreaseHeal();
-				m_board.setNewHeal(m_player.getHeal());
-
+				curPlayer.decreaseHeal();
+				curBoard.setNewHeal(curPlayer.getHeal());
+				for (int guardIndex = 0; guardIndex < curGuards.size(); guardIndex++)
+				{					
+					curBoard.setGuard(curGuards[guardIndex].getLocation(), curGuards[guardIndex].getStartLocation());
+					curGuards[guardIndex].resetLocation();					
+				}
+				curBoard.setPlayer(curPlayer.getLocation(), curPlayer.getStartLocation());
+				curPlayer.resetLocation();
 			}
-			Screen::setLocation(Location(m_board.size(), 0));
-
+			Screen::setLocation(Location(curBoard.size(), 0));
+			if (curPlayer.getHeal() <= 0) {
+				isFailed = true;				
+				break;
+			}
 		} // end while
-
+		if (isFinishLevel) {
+			system("cls");			
+		}
+		if (isFailed) {
+			system("cls");
+			std::cout << "You Failed!\nYour Points is: " << playerPoints;
+			break;
+		}
+		
 
 	}
 }
@@ -156,8 +176,9 @@ void resetGuards(std::vector<Guard>& guards, Board& board)
 
 	// update board
 }
-void checkGuardsBombed(std::vector<Guard>& guards, int& points, Bomb bomb)
+int getPointFromBombedGuards(std::vector<Guard>& guards, Bomb bomb)
 {
+	int points = 0;
 	for (int guardIndex = 0; guardIndex < guards.size(); guardIndex++)
 	{
 		struct Location bombLoc1 = bomb.getLocation();
@@ -168,6 +189,7 @@ void checkGuardsBombed(std::vector<Guard>& guards, int& points, Bomb bomb)
 			guardIndex--;
 		}
 	}
+	return points;
 }
 
 bool checkGuardCollide(std::vector<Guard> guards, Location playerLoc) {
