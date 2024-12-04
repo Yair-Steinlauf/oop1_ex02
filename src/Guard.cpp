@@ -86,7 +86,8 @@ Location Guard::move(Board &board, Player &player)
 		newLoc = randMove();
 	}
 	else newLoc = smartMove(player);
-
+	if (board.getLocationData(newLoc) == 'D')
+		return m_location;
 	return board.isValid(newLoc, m_location);
-
+	
 }
