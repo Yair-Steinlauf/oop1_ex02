@@ -65,8 +65,8 @@ void Board::print(int level)
 struct Location Board::isValid(struct Location newLoc, struct Location lastLoc)
 {
 	//added Bounds check YAIR
-	if (newLoc.col > m_board[0].size() ||
-		newLoc.row > m_board.size())
+	if (newLoc.col > m_board[0].size() -1||
+		newLoc.row > m_board.size() -1)
 	{
 		return lastLoc;
 	}
@@ -187,6 +187,11 @@ void Board::setPoint(int points)
 {
 	Screen::setLocation(m_pointLocation);
 	std::cout << points;
+}
+
+char Board::getLocationData(Location loc)
+{
+	return m_board[loc.col][loc.row];
 }
 
  

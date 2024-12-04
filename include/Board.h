@@ -22,6 +22,7 @@ public:
 	int size();
 	void setNewHeal(int heal);
 	void setPoint(int points);
+	char getLocationData(Location loc);
 
 	//bool getVictory();
 	//void setVictory();
