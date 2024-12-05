@@ -17,8 +17,10 @@ public:
 	Location randMove();
 	Location smartMove(Player& player);
 	Location move(Board& board, Player &player);
+	bool getIsExist();
 private:
 	struct Location m_location;
 	struct Location m_startLocation;
+	bool m_isExist;
 	
 };

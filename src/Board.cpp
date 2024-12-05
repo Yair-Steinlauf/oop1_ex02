@@ -44,7 +44,7 @@ void Board::loadBoard(std::string fileName, Player &player, std::vector<Guard> &
 
 
 
-void Board::print(int level)
+void Board::print(int level, int points)
 {
 	for (int row = 0; row < m_board.size(); row++)
 	{
@@ -53,7 +53,7 @@ void Board::print(int level)
 	m_healLocation = Location(m_board.size(), 6);
 	std::cout << "Heal: 3\n";
 	m_pointLocation = Location(m_board.size() + 1, 8);
-	std::cout << "Points: 0\n";
+	std::cout << "Points: " << points << std::endl;
 	m_levelLocation = Location(m_board.size() + 2, 7);
 	std::cout << "Level: " << level << std::endl;
 }
